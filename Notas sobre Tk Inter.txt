@@ -21,11 +21,9 @@ janela.mainloop()                        «--|Mainloop e um laço while True que
 
 Um gerenciador de layout define a organização dos widgets dentro de um container
 
-place «--|Os widgets são dispostos conforme suas coordenadas x e y
-pack  «--|Empacota os widgets na horizontal ou vertical
-grid  «--|Os widgets são inseridos num sistema de células de uma tabela
-
 place:
+Com o gerenciador de layout place os widgets são dispostos conforme suas coordenadas x e y
+de um plano cartesiano
 
                1          2
    0 __________|__________|
@@ -39,3 +37,31 @@ place:
   2-|
 
 Para ver o gerenciador place funcionando em um botão vá para ex003 e ex004
+
+
+pack:
+Com o gerenciador de layout pack os widgets são empacotados na horizontal ou vertical
+na ordem em que eles forem empacotados
+
+    ___________________
+   |        TOP        | «--|Com o pack, a propriedade side vincula uma extremidade a um componente sendo que
+   |                 R |    |a propriedade fill serve para que o widget preencha completamente uma extremidade
+   | L               I |       ______________
+   | E    Janela     G |      |NW     N    NE| «--|Já a propriedade anchor, vincula um alinhamento a um componente
+   | F               H |      |              |    |
+   | T               T |      |W   CENTER   E|    |Por padrão a propriedade side receberá o valor TOP,
+   |                   |      |              |    |sendo que a propriedade side sempre terá precedencia
+   |______BOTTOM_______|      |SW_____S____SE|    |a proprieda anchor
+
+Exemplos de side em ex008
+Exemplos de anchor em ex009
+EXEmplos de fill em ex010 e ex011 com a propriedade expand
+
+
+grid:
+Com o gerenciador de layout grid, os widgets são inseridos num sistema de células de uma tabela
+row = linha
+column = coluna
+sticky = alinhamento de dentro da célula
+
+exemplos de row e column em ex012
