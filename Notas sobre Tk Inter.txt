@@ -1,10 +1,36 @@
-Quando eu declaro janela = Tk()
-
-janela é um objeto que recebe a classe Tk
-
 widget           | Todo componente que compóem uma interface gráfica
 conteiner        | Um widget que pode conter outros widgets
 window           | Uma área retangular em algum lugar na tela de exibição
 top-level window | Uma janela independente que é exibida sob as demais
 frame            | Unidade basica de organização de layout complexos
 child-parent     | Nome da relação entre um widget e seu conteiner
+
+import tkinter as tk   «--|Importando o modulo tkinter onde a palavra 'as' atribui o nome pelo qual poso referir o modulo 
+janela = tk.Tk()                         «--|Quando eu declaro 'janela = Tk()', janela é um objeto que recebe a classe Tk
+janela.title("nome da janela")           «--|Nome da janela
+janela["background"] = "green"           «--|Cor de fundo
+janela.geometry("300x300+100+100")       «--|largura x altura + margem esquerda + margem top
+janela.mainloop()                        «--|Mainloop e um laço while True que mantem a janela aberta 
+
+================================================|Gerenciadores de layout|================================================
+
+Um gerenciador de layout define a organização dos widgets dentro de um container
+
+place «--|Os widgets são dispostos conforme suas coordenadas x e y
+pack  «--|Empacota os widgets na horizontal ou vertical
+grid  «--|Os widgets são inseridos num sistema de células de uma tabela
+
+place:
+
+               1          2
+   0 __________|__________|
+    |
+    |
+    |
+  1-|        janela
+    |
+    |
+    |
+  2-|
+
+Para ver o gerenciador place funcionando em um botão vá para ex003
