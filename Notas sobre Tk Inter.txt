@@ -5,6 +5,11 @@ top-level window | Uma janela independente que é exibida sob as demais
 frame            | Unidade basica de organização de layout complexos
 child-parent     | Nome da relação entre um widget e seu conteiner
 
+Alguns widgets:
+Button = botão
+Label = impreção
+Entry = entrada de dados
+
 import tkinter as tk   «--|Importando o modulo tkinter onde a palavra 'as' atribui o nome pelo qual poso referir o modulo 
 janela = tk.Tk()                         «--|Quando eu declaro 'janela = Tk()', janela é um objeto que recebe a classe Tk
 janela.title("nome da janela")           «--|Nome da janela
@@ -33,4 +38,4 @@ place:
     |
   2-|
 
-Para ver o gerenciador place funcionando em um botão vá para ex003
+Para ver o gerenciador place funcionando em um botão vá para ex003 e ex004
