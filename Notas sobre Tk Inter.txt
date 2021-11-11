@@ -5,10 +5,108 @@ top-level window | Uma janela independente que é exibida sob as demais
 frame            | Unidade basica de organização de layout complexos
 child-parent     | Nome da relação entre um widget e seu conteiner
 
+Algumas funções da classe Tk:
+destroy(self) = destroi um objeto é todos os seus widgets descendentes
+
 Alguns widgets:
 Button = botão
-Label = impreção
+  STANDARD OPTIONS
+
+    activebackground, activeforeground, anchor,
+    background, bitmap, borderwidth, cursor,
+    disabledforeground, font, foreground
+    highlightbackground, highlightcolor,
+    highlightthickness, image, justify,
+    padx, pady, relief, repeatdelay,
+    repeatinterval, takefocus, text,
+    textvariable, underline, wraplength
+
+  WIDGET-SPECIFIC OPTIONS
+
+    command, compound, default, height,
+    overrelief, state, width
+
+    Confira sobre a criação de botões em ex017
+
+Checkbutton = botão check
+  
+  Valid resource names
+
+    activebackground, activeforeground, anchor,
+    background, bd, bg, bitmap, borderwidth, command, cursor,
+    disabledforeground, fg, font, foreground, height,
+    highlightbackground, highlightcolor, highlightthickness, image,
+    indicatoron, justify, offvalue, onvalue, padx, pady, relief,
+    selectcolor, selectimage, state, takefocus, text, textvariable,
+    underline, variable, width, wraplength
+
+  deselect(self) = coloca o botão check como desativado
+  select(self) = coloca o botão check como ativado
+  toggle(self) = alterna o valor
+
+Radiobutton = botão de multiplas escolhas
+
+    Valid resource names:
+        activebackground, activeforeground, anchor,background,
+        bd, bg, bitmap, borderwidth, command, cursor,
+        disabledforeground, fg, font, foreground, height,
+        highlightbackground, highlightcolor, highlightthickness, image,
+        indicatoron, justify, padx, pady, relief, selectcolor, selectimage,
+        state, takefocus, text, textvariable, underline, value, variable,
+        width, wraplength
+
+Label = impreção de textos
+
+  STANDARD OPTIONS
+
+    activebackground, activeforeground, anchor,
+    background, bitmap, borderwidth, cursor,
+    disabledforeground, font, foreground,
+    highlightbackground, highlightcolor,
+    highlightthickness, image, justify,
+    padx, pady, relief, takefocus, text,
+    textvariable, underline, wraplength
+
+  WIDGET-SPECIFIC OPTIONS
+
+    height, state, width
+
 Entry = entrada de dados
+
+  Valid resource names
+
+    background, bd, bg, borderwidth, cursor,
+    exportselection, fg, font, foreground, highlightbackground,
+    highlightcolor, highlightthickness, insertbackground,
+    insertborderwidth, insertofftime, insertontime, insertwidth,
+    invalidcommand, invcmd, justify, relief, selectbackground,
+    selectborderwidth, selectforeground, show, state, takefocus,
+    textvariable, validate, validatecommand, vcmd, width,
+    xscrollcommand
+
+  delete(self, first, last=None) = deleta o texto
+  get(self) = retorna o texto
+  icursor(self, index) = coloca o cursor em index
+  index(self, index) = retorna a posição do cursor
+  insert(self, index, string) = inseri a string em index
+
+  Confira fontes em ex016
+
+Frame = Pode conter outros widgets
+
+  Valid resource names
+
+    background, bd, bg, borderwidth, class,
+    colormap, container, cursor, height, highlightbackground,
+    highlightcolor, highlightthickness, relief, takefocus, visual, width
+ 
+Image:  «--|Vejá como colocar imagens em ex015
+    """Base class for images."""
+        (self, imgtype, name=None, cnf={}, master=None, **kw)
+
+Listbox = ?
+Menu = ?
+Scrollbar = ?
 
 import tkinter as tk   «--|Importando o modulo tkinter onde a palavra 'as' atribui o nome pelo qual poso referir o modulo 
 janela = tk.Tk()                         «--|Quando eu declaro 'janela = Tk()', janela é um objeto que recebe a classe Tk
