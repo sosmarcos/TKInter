@@ -3,7 +3,8 @@ from tkinter import *
 
 def teste():
     print(check_variavel.get())
-    label["text"] = radio_value.get()
+    label["text"] = nome.get()
+    entrada.delete(0, len(nome.get()))
     if check_variavel.get():
         check['text'] = 'Ativado'
     else:
@@ -44,5 +45,15 @@ radio3 = Radiobutton(window, text='Opção 3', variable=radio_value, value=3, in
 label = Label(window, text=radio_value.get())
 label.pack()
 
+nome = StringVar()
+
+entrada = Entry(window)
+entrada["foreground"] = 'red'
+entrada["background"] = 'blue'
+entrada["font"] = 'Times 12 bold'
+entrada["borderwidth"] = 0
+entrada["justify"] = 'center'
+entrada["textvariable"] = nome
+entrada.pack()
 
 window.mainloop()

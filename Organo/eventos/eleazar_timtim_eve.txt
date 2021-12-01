@@ -1,0 +1,1 @@
+01/12/2021;Teste de eventos 1;Teste de adição de eventos em widgets da classe Tk.Text

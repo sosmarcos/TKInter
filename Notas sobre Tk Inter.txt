@@ -91,6 +91,7 @@ Entry = entrada de dados
   insert(self, index, string) = inseri a string em index
 
   Confira fontes em ex016
+  Confira entrada em ex017
 
 Frame = Pode conter outros widgets
 
@@ -153,7 +154,7 @@ na ordem em que eles forem empacotados
 
 Exemplos de side em ex008
 Exemplos de anchor em ex009
-EXEmplos de fill em ex010 e ex011 com a propriedade expand
+Exemplos de fill em ex010 e ex011 com a propriedade expand
 
 
 grid:

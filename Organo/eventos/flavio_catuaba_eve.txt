@@ -1,0 +1,4 @@
+01/12/2021;Teste de eventos;Testando a adição de eventos em wigets da classe Tk.Text
+60/12/2021;Teste de datas 1;Testando a validação da entrada de datas
+01/13/2021;Teste de datas 2;Testando a validação da entrada de datas
+01/12/2020;Teste de datas 3;Testando a validação da entrada de datas
