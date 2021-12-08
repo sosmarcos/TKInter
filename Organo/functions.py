@@ -56,41 +56,66 @@ def cadastro_display(lista):
         lista[0] = False
 
 
-def add_event(nome, sobrenome, label1, entry1, label2, entry2, label3, entry3, button, var1, var2, var3, printer):
+def add_event(nome, sobrenome, label1, entry1, label2, entry2, button1, button2, var1, var2, printer, retorno):
+    retorno.grid_remove()
     dia = f'{date.today().day}'; mes = f'{date.today().month}'; ano = f'{date.today().year}'
 
     if len(dia) == 1: dia = f'0{date.today().day}'
     if len(mes) == 1: mes = f'0{date.today().month}'
 
     data = f'{dia}/{mes}/{ano}'
-    print(printer.get('1.0', '1.24'))
+
     if not cheque_arquivo(f'eventos/{nome}_{sobrenome}_eve.txt'):
         criar_arquivo(f'eventos/{nome}_{sobrenome}_eve.txt')
 
-    label1.grid(row=8, column=0, columnspan=2, sticky=W)
-    entry1.grid(row=9, column=0, columnspan=3, sticky=W + E)
+    label1.grid(row=10, column=0, columnspan=3, sticky=E)
+    entry1.delete(0, len(entry1['textvariable']) + 3)
+    entry1.insert(0, data)
+    entry1.grid(row=11, column=0, columnspan=3, sticky=E)
 
-    label2.grid(row=10, column=0, columnspan=2, sticky=W)
-    entry2.delete(0, len(entry2['textvariable']) + 3)
-    entry2.insert(0, data)
-    entry2.grid(row=10, column=0, columnspan=2)
+    label2.grid(row=10, column=0, columnspan=3, sticky=W)
+    entry2.grid(row=11, column=0, columnspan=3, sticky=W)
 
-    label3.grid(row=10, column=1, sticky=E)
-    entry3.grid(row=10, column=1, columnspan=2, sticky=E)
-
-    button['command'] = partial(
-        evento_apend, f'eventos/{nome}_{sobrenome}_eve.txt', 
-        var2, var3, var1, printer, {
-            'entry1': entry1, 
-            'entry2': entry2, 
-            'entry3': entry3, 
-            'label1': label1, 
-            'label2': label2, 
-            'label3': label3,
-            'button': button
+    button2['text'] = 'Cancelar'
+    button2['command'] = partial(
+        cancel_add, var1, var2, button2, {
+            'entry1': entry1,
+            'entry2': entry2,
+            'label1': label1,
+            'label2': label2,
+            'button': button1,
+            'retorno': retorno
         }
     )
-    button.grid(row=11, column=0, columnspan=3, sticky=W + E)
+
+    button1['command'] = partial(
+        evento_apend, f'eventos/{nome}_{sobrenome}_eve.txt', 
+        var1, var2, retorno, printer, button2, {
+            'entry1': entry1, 
+            'entry2': entry2,
+            'label1': label1, 
+            'label2': label2,
+            'button': button1
+        }
+    )
+    button1.grid(row=14, column=0, columnspan=3, sticky=W + E)
+
+
+def cancel_add(data, texto, button, widgets):
+    button['text'] = ''
+
+    widgets['entry1'].delete(0, len(data.get()))
+    widgets['entry2'].delete(0, len(texto.get()))
+
+    for widget in widgets.values():
+        widget.grid_remove()
+
+
+def cancel_delete(variavel, button, widgets):
+    button['text'] = ''
+    widgets['entry'].delete(0, len(variavel.get()))
+    for widgets in widgets.values():
+        widgets.grid_remove()
 
 
 def data_valida(arg_data):
@@ -255,62 +280,96 @@ def cheque_arquivo(nome):
         return True
 
 
+def cheque_eventos(arquivo, string):
+    try:
+        a_arquivo = open(arquivo, 'r')
+    except:
+        print('Diz cheque_eventos: ERRO NA ABERTURA DE EVENTOS')
+    else:
+        linhas = a_arquivo.readlines()
+    finally:
+        a_arquivo.close()
+
+        validate = False
+        for linha in linhas:
+            evento = linha.split(';')[1]
+            evento = evento.replace('\n', '').lower()
+            variavel = string.lower().strip()
+            if evento == variavel:
+                validate = True
+        
+        return validate
+
 def criar_arquivo(nome):
     try:
         arquivo = open(nome, 'wt+')
         arquivo.close()
     except:
-        print('\033[1;31mERRO NA CRIAÇÃO DO ARQUIVO\033[m')
+        print('ERRO NA CRIAÇÃO DO ARQUIVO')
     else:
         print('Arquivo Criado Com Sucesso')
 
 
-def evento_apend(arquivo, data, titulo, evento, printer, widgets):
+def evento_apend(arquivo, data, text, retorno, printer, button, widgets):
+    validate = False
+    texto = text.get()
+    print(texto)
+    
+    if len(texto.strip()) > 50:
+        retorno['text'] = 'Texto muito grande\n'
+        retorno.grid(row=13, column=0, columnspan=3, sticky=W + E)
+        print('Texto muito grande')
+    else:
+        if data_valida(data.get()): 
+            if cheque_eventos(arquivo, texto):
+                retorno['text'] = 'Este evento ja existe\n'
+                retorno.grid(row=13, column=0, columnspan=3, sticky=W + E)
+            else:
+                try:
+                    arquivo = open(arquivo, 'at')
+                except:
+                    print('Diz evento_apend: ERRO NA ABERTURA DO ARQUIVO')
+                else:
+                    arquivo.write(f'{data.get()};{texto}\n')
+                    validate = True
+                finally:
+                    arquivo.close()
+        else:
+            retorno['text'] = 'Data Invalida\n'
+            retorno.grid(row=13, column=0, columnspan=3, sticky=W + E)
+            print('Data Invalida')
+
+
+    if validate:
+        if printer.get('1.0', '1.24') == 'Nenhum evento registrado':
+            printer.delete('1.0', END)
+        printer.insert(END, f'{data.get()} - {texto.capitalize()}\n')
+    
+    button['text'] = ''
+    widgets['entry1'].delete(0, len(data.get()))
+    widgets['entry2'].delete(0, len(texto))
+
+    for widget in widgets.values():
+        widget.grid_remove()
+    
+
+
+def arquivo_apend(arquivo, nome='Desconhecido', sobrenome='Desconhecido', idade=0, estadia=''):
+    dia = f'{date.today().day}'; mes = f'{date.today().month}'; ano = f'{date.today().year}'
+
+    if len(dia) == 1: dia = f'0{date.today().day}'
+    if len(mes) == 1: mes = f'0{date.today().month}'
+
+    data = f'{dia}/{mes}/{ano}'
     try:
         arquivo = open(arquivo, 'at')
     except:
         print('ERRO NA ABERTURA DO ARQUIVO')
     else:
         try:
-            if data_valida(data.get()):
-                arquivo.write(f'{data.get()};{titulo.get()};{evento.get()}\n')
-            else:
-                print('Data Invalida')
-        except:
-            print('ERRO NA ESCRITA')
-        else:
-            if printer.get('1.0', '1.24') == 'Nenhum evento registrado':
-                printer.delete('1.0', END)
-            printer.insert(END, f'{data.get()} - {titulo.get()}\n')
-
-            widgets['entry1'].delete(0, len(evento.get()))
-            widgets['entry2'].delete(0, len(data.get()))
-            widgets['entry3'].delete(0, len(titulo.get()))
-
-            for widget in widgets.values():
-                widget.grid_remove()
-    finally:
-        arquivo.close()
-
-
-def arquivo_apend(arquivo, nome='Desconhecido', sobrenome='Desconhecido', idade=0, estadia=''):
-    dia = f'{date.today().day}'
-    if len(dia) == 1:
-        dia = f'0{date.today().day}'
-    mes = f'{date.today().month}'
-    if len(mes) == 1:
-        mes = f'0{date.today().month}'
-    ano = f'{date.today().year}'
-    data = f'{dia}/{mes}/{ano}'
-    try:
-        arquivo = open(arquivo, 'at')
-    except:
-        print('\033[1;31mERRO NA ABERTURA DO ARQUIVO\033[m')
-    else:
-        try:
             arquivo.write(f'{nome};{sobrenome};{idade};{estadia};{data}\n')
         except:
-            print('\033[1;31mERRO NA ESCRITA\033[m')
+            print('ERRO NA ESCRITA')
         else:
             print(f'{nome.capitalize()} {sobrenome.capitalize()} registrado com sucesso')
     finally:
@@ -330,7 +389,7 @@ def login(arquivo, nome):
     try:
         arquivo = open(arquivo, 'rt')
     except:
-        print('\033[1;31mERRO NA ABERTURA DO ARQUIVO\033[m')
+        print('ERRO NA ABERTURA DO ARQUIVO')
     else:
         try:
             fnome = nome.split()[0]
@@ -357,7 +416,7 @@ def return_events(arquivo):
     try:
         arquivo = open(arquivo, 'rt')
     except:
-        print('ERRO NA ABERTURA DE EVENTOS')
+        print('Diz return_events: ERRO NA ABERTURA DE EVENTOS')
     else:
         eventos = []
 
@@ -369,3 +428,59 @@ def return_events(arquivo):
         return eventos
     finally:
         arquivo.close()
+
+
+def delete_event(nome, sobrenome, label, entrada, variavel, button1, button2, retorno, event_printer):
+
+
+    def delete_this(arquivo, string):
+        try:
+            a_arquivo = open(arquivo, 'r')
+        except:
+            print('Diz delete_this: ERRO NA ABERTURA DE EVENTOS')
+            retorno['text'] = 'Erro na abertura dos eventos\n'
+            retorno.grid(row=13, column=0, columnspan=3, sticky=W + E)
+        else:
+            linhas = a_arquivo.readlines()
+        finally:
+            a_arquivo.close()
+
+            novo_arquivo = open(arquivo, 'w')
+            for linha in linhas:
+                evento = linha.split(';')[1]
+                evento = evento.replace('\n', '').lower()
+                variavel = string.get().lower().strip()
+                if evento != variavel:
+                    novo_arquivo.write(linha)
+            
+            novo_arquivo.close()
+
+            entrada.delete(0, len(string.get()))
+
+            label.grid_remove()
+            entrada.grid_remove()
+            button1.grid_remove()
+
+            event_printer.delete('1.0', END)
+            eventos = return_events(arquivo)
+            for evento in eventos:
+                event_printer.insert(END, f'{evento}\n')
+
+
+    retorno.grid_remove()
+    arquivo = f'eventos/{nome}_{sobrenome}_eve.txt'
+    label.grid(row=10, column=0, columnspan=3, sticky=W)
+    entrada.grid(row=11, column=0, columnspan=3, sticky=W)
+
+    button1['command'] = partial(delete_this, arquivo, variavel)
+    button1.grid(row=11, column=0, columnspan=3, sticky=E)
+
+    button2['text'] = 'Cancelar'
+    button2['command'] = partial(
+        cancel_delete, variavel, button2, {
+            'entry': entrada,
+            'label': label,
+            'button': button1,
+            'retorno': retorno
+        }
+    )

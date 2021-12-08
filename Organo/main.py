@@ -147,25 +147,37 @@ def enviar_login(nomevar, sobrenomevar):
 
         event_bar.grid(row=6, column=0, columnspan=3, sticky=W + E)
         
-        button5['command'] = partial(
+        button5['command'] = partial(  # Botão responsavel por iniciar a adição de eventos
             add_event, 
             hospede.nome, 
             hospede.sobrenome,
             label5, 
             entrada5,
             label6,
-            entrada6, 
-            label7,
-            entrada7,
-            button6, 
-            event_definition,
+            entrada6,
+            button6,
+            button7,
             event_date,
             event_title,
-            event_printer
+            event_printer,
+            retorno1
         )
         button5.grid(row=0, column=0, sticky=W + E)
 
         button7.grid(row=0, column=1, sticky=W + E)
+
+        button8['command'] = partial(  # Botção responsavel por deletar
+            delete_event,
+            hospede.nome,
+            hospede.sobrenome,
+            label7,
+            entrada7,
+            event_choice,
+            button9,
+            button7,
+            retorno1,
+            event_printer
+        )
         button8.grid(row=0, column=3, sticky=W + E)
         
         eventFrame.grid(row=7, column=0, columnspan=3, sticky=W + E)
@@ -173,13 +185,13 @@ def enviar_login(nomevar, sobrenomevar):
         event_printer.pack(side=LEFT)
 
 
-dia = f'{date.today().day}'
-if len(dia) == 1:
-    dia = f'0{date.today().day}'
-mes = f'{date.today().month}'
-if len(mes) == 1:
-    mes = f'0{date.today().month}'
-ano = f'{date.today().year}'
+# ===========================================|Variaveis|==================================================================
+
+dia = f'{date.today().day}'; mes = f'{date.today().month}'; ano = f'{date.today().year}'
+
+if len(dia) == 1: dia = f'0{date.today().day}'
+if len(mes) == 1: mes = f'0{date.today().month}'
+
 data_atual = f'{dia}/{mes}/{ano}'
 
 if not cheque_arquivo('Registros.txt'):  # Checagem e criação de arquivos para registro
@@ -270,6 +282,8 @@ event_printer = Text(
 
 event_bar = Frame(mainFrame, background=cores['azusão'])
 
+# ==================================|Adição de Eventos|===================================================================
+
 button5 = Button(  # Botão responsavel por iniciar o registro de novos eventos
     event_bar,
     width=21,
@@ -293,22 +307,22 @@ button6 = Button(  # Botão responsavel por registrar novos eventos
     activeforeground='white'
 )
 
-event_definition = StringVar()  # Bloco de entrada da variavel evento
-label5 = Label(mainFrame, text='\nDigite aqui um evento:', font='Times 14 bold')
-entrada5 = Entry(mainFrame, textvariable=event_definition, font='Helvetica 12')
-
 event_date = StringVar()  # Bloco de entrada da variavel data do evento
-label6 = Label(mainFrame, text='Data do evento:', font='Times 14 bold')
-entrada6 = Entry(mainFrame, width=11, justify='center', textvariable=event_date, font='Helvetica 12')
+label5 = Label(mainFrame, text='Data do evento:', font='Times 14 bold')
+entrada5 = Entry(mainFrame, width=11, justify='center', textvariable=event_date, font='Helvetica 12')
 
 event_title = StringVar()  # Bloco de entrada da variavel titulo do evento
-label7 = Label(mainFrame, text='Titulo do Evento:', font='Times 14 bold')
-entrada7 = Entry(mainFrame, width=19, textvariable=event_title, font='Helvetica 12')
+label6 = Label(mainFrame, text='Digite aqui um  evento com no maximo 50 caracteres:', font='Times 14 bold')
+entrada6 = Entry(mainFrame, width=49, textvariable=event_title, font='Helvetica 12')
+
+retorno1 = Label(mainFrame, foreground='red' ,font='Times 14 bold')
+
+# ==================================|Botão de cancelamento|===============================================================
 
 button7 = Button(
     event_bar,
     width=21,
-    text='Editar',
+    text='',
     borderwidth=0,
     font='Times 12 bold',
     background=cores['azusão'],
@@ -316,6 +330,8 @@ button7 = Button(
     activebackground=cores['vermelho'],
     activeforeground='white'
 )
+
+# ====================================|Deletar eventos|===================================================================
 
 button8 = Button(
     event_bar,
@@ -328,6 +344,22 @@ button8 = Button(
     activebackground=cores['vermelho'],
     activeforeground='white'
 )
+
+button9 = Button(  # Botão responsavel por deletar eventos
+    mainFrame,
+    text='Deletar',
+    width=14,
+    borderwidth=0,
+    font='Times 12 bold',
+    background=cores['azusão'],
+    foreground='white',
+    activebackground=cores['vermelho'],
+    activeforeground='white'
+)
+
+event_choice = StringVar()  # Bloco de entrada da variavel titulo do evento
+label7 = Label(mainFrame, text='Digite aqui o evento a ser deletado:', font='Times 14 bold')
+entrada7 = Entry(mainFrame, width=49, textvariable=event_choice, font='Helvetica 12')
 
 aberto1 = False
 aberto2 = False
@@ -404,40 +436,3 @@ margin_top.pack()
 mainFrame.pack()
 
 window.mainloop()
-
-'''
-# ===============================|Pagina do Hospede|====================================================================
-            while True:
-                usuario = menu('[1] para acessar as informações:\n'
-                               '[2] para adicionar eventos:\n'
-                               '[3] para retornar ao menu principal: ', '1', '2', '3')
-                if usuario == '1':
-                    loading(f'|Cadastro realizado em {pessoa.data}|')
-                    print(f'{"Nome":.<30}{pessoa.nome.title()} {pessoa.sobrenome.title()}\n'
-                          f'{"Idade":.<30}{pessoa.idade} anos\n'
-                          f'{"Estadia":.<30}{data_count(data_convert(data_atual),data_convert(pessoa.estadia))} dias')
-                    if cheque_arquivo(f'eventos/{pessoa.nome}_{pessoa.sobrenome}_eve.txt'):
-                        print_eventos(f'eventos/{pessoa.nome}_{pessoa.sobrenome}_eve.txt')
-                    else:
-                        print('Nenhum evento registrado')
-                    loading()
-
-                elif usuario == '2':
-                    loading('|Eventos|')
-                    if not cheque_arquivo(f'eventos/{pessoa.nome}_{pessoa.sobrenome}_eve.txt'):
-                        criar_arquivo(f'eventos/{pessoa.nome}_{pessoa.sobrenome}_eve.txt')
-                    evento = str(input('Digite aqui o evento: ')).strip()
-                    data = data_valida('Data do evento(00/00/0000): ')
-                    evento_apend(f'eventos/{pessoa.nome}_{pessoa.sobrenome}_eve.txt', data, evento)
-
-                elif usuario == '3':
-                    sleep(1)
-                    print(f'\n{70 * "="}\n{"Organizador de Tarefas":^70}\n{70 * "="}')
-                    break
-
-# ====================================|Sair|============================================================================
-    elif principal == '3':
-        loading('|Saindo|')
-        sleep(1)
-        break
-'''
